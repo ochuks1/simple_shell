@@ -53,7 +53,7 @@ int main() {
         /* Read the command line from the user */
         command_line = (char *)malloc(BUFFER_SIZE);
         if (my_getline(command_line, BUFFER_SIZE) == -1) {
-            break; // EOF or error
+            break; /* EOF or error */
         }
 
         /* Handle built-in commands */
@@ -66,7 +66,9 @@ int main() {
             char *envp[] = environ;
             while (*envp) {
                 printf("%s\n", *envp);
-                envp++;
+                for (int i = 0; envp[i] != NULL; ++i) {
+			printf("%s\n", envp[i])
+		};
             }
             free(command_line);
             continue;
