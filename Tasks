@@ -1,0 +1,101 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <unistd.h>
+#include <sys/wait.h>
+
+#define BUFFER_SIZE 1024
+
+/* Custom getline function to read lines from input efficiently */
+static int my_getline(char *buffer, size_t size) {
+    int bytes_read = 0;
+    int i = 0;
+    char c;
+
+    while ((c = getchar()) != '\n' && bytes_read < size - 1) {
+        buffer[i] = c;
+        bytes_read++;
+        i++;
+    }
+
+    if (c != '\n') {
+        return -1; /* EOF or error */
+    }
+
+    buffer[i] = '\0'; /* Add null terminator */
+    return bytes_read;
+}
+
+/* Split command line into command and arguments */
+static void split_command(char *command, char **argv) {
+    char *token;
+    int i = 0;
+
+    token = strtok(command, " ");
+    while (token != NULL) {
+        argv[i] = token;
+        i++;
+        token = strtok(NULL, " ");
+    }
+
+    argv[i] = NULL; /* Terminate argument list */
+}
+
+int main() {
+    char *command_line;
+    char *argv[BUFFER_SIZE];
+    pid_t pid;
+    int status;
+
+    while (1) {
+        printf("simple_shell> ");
+
+        /* Read the command line from the user */
+        command_line = (char *)malloc(BUFFER_SIZE);
+        if (my_getline(command_line, BUFFER_SIZE) == -1) {
+            break; // EOF or error
+        }
+
+        /* Handle built-in commands */
+        if (strcmp(command_line, "exit\n") == 0) {
+            free(command_line);
+            break;
+        }
+
+        if (strncmp(command_line, "env\n", 4) == 0) {
+            char *envp[] = environ;
+            while (*envp) {
+                printf("%s\n", *envp);
+                envp++;
+            }
+            free(command_line);
+            continue;
+        }
+
+        /* Handle other commands */
+        split_command(command_line, argv);
+
+        /* Check if the command exists */
+        if (access(argv[0], F_OK) == -1) {
+            printf("Error: Command not found: %s\n", argv[0]);
+            free(command_line);
+            continue;
+        }
+
+        /* Fork a child process to execute the command */
+        pid = fork();
+        if (pid == 0) {
+            /* Child process executes the command */
+            execve(argv[0], argv, environ);
+            printf("Error: Exec failed\n");
+            exit(1);
+        } else {
+            /* Parent process waits for the child process to finish */
+            waitpid(pid, &status, 0);
+        }
+
+        free(command_line);
+    }
+
+    return (0);
+}
