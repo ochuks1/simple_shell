@@ -30,13 +30,13 @@ int main(void)
         printf(":) ");
         getline(&buffer, &bufsize, stdin);
 
-        // Remove newline character
+        /*  Remove newline character */
         buffer[strlen(buffer) - 1] = '\0';
 
-        // Handle logical operators (&& and ||)
+        /* Handle logical operators (&& and ||) */
         handle_logical_operators(buffer, &status);
 
-        // Skip empty commands
+        /* Skip empty commands */
         if (buffer[0] == '\0')
             continue;
 
@@ -51,7 +51,7 @@ int main(void)
         }
         args[arg_count] = NULL;
 
-        // Handle built-in commands
+        /* Handle built-in commands */
         if (strcmp(args[0], "cd") == 0)
         {
             handle_cd(args);
@@ -74,7 +74,7 @@ int main(void)
         }
         else
         {
-            // Execute external commands
+            /* Execute external commands */
             execute_command(args[0], args);
         }
     }
@@ -125,7 +125,7 @@ void handle_cd(char *args[])
             perror("cd");
     }
 
-    // Update PWD environment variable
+    /* Update PWD environment variable */
     char cwd[PATH_MAX];
     getcwd(cwd, sizeof(cwd));
     setenv("PWD", cwd, 1);
@@ -174,25 +174,25 @@ void handle_logical_operators(char *command, int *status)
     char *ptr;
     if ((ptr = strstr(command, "&&")) != NULL)
     {
-        *ptr = '\0'; // Replace && with null terminator
-        execute_command(command, NULL); // Execute the first part
+        *ptr = '\0'; /* Replace && with null terminator */
+        execute_command(command, NULL); /* Execute the first part */
         if (*status == 0)
         {
-            execute_command(ptr + 2, NULL); // Execute the second part if the first part succeeds
+            execute_command(ptr + 2, NULL); /* Execute the second part if the first part succeeds */
         }
     }
     else if ((ptr = strstr(command, "||")) != NULL)
     {
-        *ptr = '\0'; // Replace || with null terminator
-        execute_command(command, NULL); // Execute the first part
+        *ptr = '\0'; /* Replace || with null terminator */
+        execute_command(command, NULL); /* Execute the first part */
         if (*status != 0)
         {
-            execute_command(ptr + 2, NULL); // Execute the second part if the first part fails
+            execute_command(ptr + 2, NULL); /* Execute the second part if the first part fails */
         }
     }
     else
     {
-        // No logical operators, execute the command as is
+        /* No logical operators, execute the command as is */
         execute_command(command, NULL);
     }
 }
