@@ -29,14 +29,17 @@ int main(void)
             execve(line, NULL, environ);
             perror("Execution failed");
             exit(EXIT_FAILURE);
-        } else if (pid < 0) {
-            perror("Fork failed");
-        } else {
+}
+else if (pid < 0)
+{
+perror("Fork failed");
+} 
+else
+{
             /* Parent process */
-            wait(NULL);
-        }
-    }
-
-    free(line);
-    return 0;
+wait(NULL);
+}
+}
+free(line);
+return 0;
 }
