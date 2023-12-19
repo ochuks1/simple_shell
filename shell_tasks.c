@@ -42,7 +42,26 @@ else
 wait(NULL);
 }
 }
-
+/**
+ * Display the shell prompt
+ */
+void display_prompt(void)
+{
+printf("#cisfun$ ");
+}
+/**
+ * Read a command from the user
+ *
+ * Return: User input as a string.
+ */
+char *read_command(void)
+{
+char *command = NULL;
+size_t bufsize = 0;
+/* Read a line of user input */
+getline(&command, &bufsize, stdin);
+return command;
+}
 /**
  * main - Simple shell program
  * Return: Always 0
