@@ -33,8 +33,8 @@ fprintf(stderr, "%s: command not found\n", command);
 exit(EXIT_FAILURE);
 }
 }
-else if (pid < 0) 
-{	
+else if (pid < 0)
+{
 perror("Fork failed");
 }
 else
@@ -64,6 +64,6 @@ exit(EXIT_SUCCESS);
 execute_command(line);
 }
 free(line);
-return 0;
+return (0);
 }
 }
