@@ -1,0 +1,34 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
+
+int main(void)
+{
+    char *line = NULL;
+    size_t len = 0;
+
+    while (1) {
+        printf("$ ");
+        getline(&line, &len, stdin);
+
+        /* Remove newline character */
+        line[strcspn(line, "\n")] = 0;
+
+        /* Fork and execute the command */
+        pid_t pid = fork();
+        if (pid == 0) {
+            /* Child process */
+            execlp(line, line, NULL);
+            perror("Execution failed");
+            exit(EXIT_FAILURE);
+        } else if (pid < 0) {
+            perror("Fork failed");
+        } else {
+            /* Parent process */
+            wait(NULL);
+        }
+    }
+
+    free(line);
+    return 0;
+}
