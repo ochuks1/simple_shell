@@ -6,8 +6,6 @@
 #include <sys/types.h>
 #include <sys/wait.h>
 
-extern char **environ;  /* External variable for environment variables */
-
 /**
  * execute_command - Execute the given command
  * @command: The command to execute
@@ -67,4 +65,5 @@ execute_command(line);
 }
 free(line);
 return 0;
+}
 }

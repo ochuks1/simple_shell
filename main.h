@@ -6,9 +6,8 @@
 #include <string.h>
 #include <unistd.h>
 #include <sys/wait.h>
-
 #define BUFFER_SIZE 1024
 
-int main();
+int main(void);
 
 #endif
