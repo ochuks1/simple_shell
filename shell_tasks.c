@@ -1,3 +1,4 @@
+#include "shell.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
@@ -14,8 +15,17 @@ extern char **environ;  /* External variable for environment variables */
 void execute_command(char *command) {
     pid_t pid = fork();
     if (pid == 0) {
+        char **args = malloc(2 * sizeof(char *));
+        if (args == NULL) {
+            perror("malloc failed");
+            exit(EXIT_FAILURE);
+        }
+
+        args[0] = command;
+        args[1] = NULL;
+
         if (access(command, F_OK) != -1) {
-            execve(command, NULL, environ);
+            execve(command, args, environ);
         } else {
             fprintf(stderr, "%s: command not found\n", command);
             exit(EXIT_FAILURE);
