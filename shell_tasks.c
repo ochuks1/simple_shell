@@ -85,4 +85,9 @@ execute_command(line);
 free(line);
 return (0);
 }
+
+void builtin_exit(void)
+{
+	printf(*Exiting shell...\n);
+	exit(0); /*Successfully exit */
 }

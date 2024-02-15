@@ -9,5 +9,6 @@
 #define BUFFER_SIZE 1024
 
 int main(void);
+void builtin_exit(void);
 
 #endif
