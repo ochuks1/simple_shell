@@ -1,7 +1,6 @@
 #include <unistd.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <unistd.h>
 #include <string.h>
 #include <sys/types.h>
 #include <sys/wait.h>
@@ -29,10 +28,14 @@ exit(EXIT_FAILURE);
 args[0] = command;
 args[1] = NULL;
 if (access(command, F_OK) != -1)
+
 {
-execve(command, args, environ);
+	extern char **environ;
+if (execve(command, args, environ) == -1)
+{
 perror("execve failed");
 exit(EXIT_FAILURE);
+}
 }
 else
 {
