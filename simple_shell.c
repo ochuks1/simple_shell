@@ -1,3 +1,5 @@
+/* Filename: simple_shell.c */
+
 #include "shell.h"
 #include <stdio.h>
 #include <stdlib.h>
@@ -38,8 +40,7 @@ void execute_command(char *command) {
         exit(EXIT_FAILURE);
     } else if (pid == 0) {
         /* Child process */
-        char *args[] = {NULL, NULL}; /* Initialize args array */
-        args[0] = command; /* Assign command to the first element */
+        char *args[] = {command, NULL};
         if (execve(args[0], args, NULL) == -1) {
             perror("execve");
             exit(EXIT_FAILURE);
