@@ -9,6 +9,8 @@
 #define BUFFER_SIZE 1024
 
 int main(void);
+void run_shell(void);
+void execute_command(char *command);
 void builtin_exit(void);
 
 #endif
