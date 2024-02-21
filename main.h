@@ -11,6 +11,7 @@
 int main(void);
 void run_shell(void);
 void execute_command(char *command);
+void execve(command, args, environ);
 void builtin_exit(void);
 
 #endif

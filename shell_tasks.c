@@ -1,4 +1,4 @@
-#include "shell.h"
+#include <unistd.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
@@ -13,7 +13,12 @@
 void execute_command(char *command)
 {
 pid_t pid = fork();
-if (pid == 0)
+if (pid == -1)
+{
+perror("fork failed");
+exit(EXIT_FAILURE);
+}
+    if (pid == 0)
 {
 char **args = malloc(2 * sizeof(char *));
 if (args == NULL)
@@ -26,6 +31,8 @@ args[1] = NULL;
 if (access(command, F_OK) != -1)
 {
 execve(command, args, environ);
+perror("execve failed");
+exit(EXIT_FAILURE);
 }
 else
 {
@@ -33,15 +40,8 @@ fprintf(stderr, "%s: command not found\n", command);
 exit(EXIT_FAILURE);
 }
 }
-else if (pid < 0)
-{
-perror("Fork failed");
 }
-else
-{
-wait(NULL);
-}
-}
+
 /**
  * Display the shell prompt
  */
@@ -88,6 +88,6 @@ return (0);
 
 void builtin_exit(void)
 {
-	printf(*Exiting shell...\n);
+	printf("Exiting shell...\n");
 	exit(0); /*Successfully exit */
 }

@@ -40,21 +40,21 @@ int main(void)
 
     while (1)
     {
-        // Prompt for input
+        /* Prompt for input */
         printf(":) ");
         fflush(stdout);
 
-        // Read the input command line
+        /* Read the input command line */
         if (fgets(input, sizeof(input), stdin) == NULL)
         {
             printf("\n");
             break;
         }
 
-        // Tokenize the input command line
+        /* Tokenize the input command line */
         tokenize(input, args);
 
-        // Fork a child process
+        /* Fork a child process */
         pid = fork();
 
         if (pid < 0)
@@ -64,9 +64,9 @@ int main(void)
         }
         else if (pid == 0)
         {
-            // Child process
+            /* Child process */
 
-            // Execute the command
+            /* Execute the command */
             if (execvp(args[0], args) == -1)
             {
                 perror("execvp");
@@ -75,9 +75,9 @@ int main(void)
         }
         else
         {
-            // Parent process
+            /* Parent process */
 
-            // Wait for the child process to finish
+            /* Wait for the child process to finish */
             waitpid(pid, &status, 0);
         }
     }
