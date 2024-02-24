@@ -1,0 +1,64 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
+#include <string.h>
+
+#define BUFFER_SIZE 1024
+
+/**
+ * print_environment - Prints the current environment
+ */
+void print_environment(void)
+{
+    extern char **environ;
+    int i = 0;
+
+    while (environ[i] != NULL)
+    {
+        printf("%s\n", environ[i]);
+        i++;
+    }
+}
+
+/**
+ * main - Entry point for the simple shell
+ *
+ * Return: Always 0
+ */
+int main(void)
+{
+    char command[BUFFER_SIZE];
+
+    while (1)
+    {
+        printf("$ ");
+
+        if (fgets(command, BUFFER_SIZE, stdin) == NULL)
+        {
+            if (feof(stdin))
+            {
+                printf("\n");
+                break;
+            }
+            else
+            {
+                perror("fgets");
+                break;
+            }
+        }
+        command[strcspn(command, "\n")] = '\0';
+
+        if (strcmp(command, "exit") == 0)
+            break;
+        else if (strcmp(command, "env") == 0)
+        {
+            print_environment();
+            continue;
+        }
+
+        /* Execute command */
+        system(command);
+    }
+
+    return (0);
+}

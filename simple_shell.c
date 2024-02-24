@@ -41,8 +41,8 @@ void execute_command(char *command) {
     } else if (pid == 0) {
         /* Child process */
         char *args[] = {command, NULL};
-        if (execve(args[0], args, NULL) == -1) {
-            perror("execve");
+        if (execve(command, args, NULL) == -1) {
+            perror("Error");
             exit(EXIT_FAILURE);
         }
     } else {
