@@ -1,64 +1,46 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
-#include <sys/wait.h>
-#include <string.h>
-
-#define BUFFER_SIZE 1024
 
 /**
- * main - Entry point for the simple shell
+ * main - Simple shell implementation
  *
  * Return: Always 0
  */
 int main(void)
 {
-    char command[BUFFER_SIZE];
+    char *buffer = NULL;
+    size_t bufsize = 0;
+    ssize_t characters;
+    pid_t pid;
 
     while (1)
     {
-        printf("$ "); /* Displaying the prompt */
-
-        /* Read user input */
-        if (fgets(command, BUFFER_SIZE, stdin) == NULL)
+        printf("$ ");
+        characters = getline(&buffer, &bufsize, stdin);
+        if (characters == EOF)
         {
-            if (feof(stdin))
-            {
-                printf("\n"); /* Print a newline for clarity */
-                break; /* Exit the loop if end-of-file is reached (Ctrl+D) */
-            }
-            else
-            {
-                perror("fgets"); /* Print an error if fgets fails for other reasons */
-                break; /* Exit the loop in case of error */
-            }
+            printf("\n");
+            break;
         }
-
-        /* Remove trailing newline character */
-        command[strcspn(command, "\n")] = '\0';
-
-        /* Create child process to execute the command */
-        pid_t pid = fork();
+        buffer[characters - 1] = '\0'; /* Remove newline character */
+        pid = fork();
         if (pid == -1)
         {
-            perror("fork");
+            perror("Error");
             exit(EXIT_FAILURE);
         }
-        else if (pid == 0)
+        if (pid == 0)
         {
-            /* Child process */
-            execlp(command, command, NULL);
-            /* If execvp returns, it must have failed */
-            perror("exec");
+            execlp(buffer, buffer, NULL);
+            perror("Error");
             exit(EXIT_FAILURE);
         }
         else
         {
-            /* Parent process */
-            int status;
-            waitpid(pid, &status, 0); /* Wait for child process to finish */
+            wait(NULL);
         }
     }
-
+    free(buffer);
     return (0);
 }
